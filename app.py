@@ -1,10 +1,11 @@
 import streamlit as st
 import pandas as pd
 import joblib
+import os
 
 # === 1. Load Model & Kolom ===
-model = joblib.load(r"C:\PDnA\rf_model.pkl")
-columns = joblib.load(r"C:\PDnA\columns.pkl")
+model = joblib.load(os.path.join(os.path.dirname(__file__), "rf_model.pkl"))
+columns = joblib.load(os.path.join(os.path.dirname(__file__), "columns.pkl"))
 
 # === 2. Tampilan Halaman ===
 st.title("🎓 Prediksi Nilai Overall Mahasiswa")
@@ -42,4 +43,5 @@ if uploaded_file is not None:
     st.download_button("💾 Download hasil prediksi", csv, "hasil_prediksi.csv", "text/csv")
 
 else:
+
     st.info("Silakan upload file CSV terlebih dahulu.")
