@@ -50,22 +50,19 @@ if uploaded_file is not None:
         st.write(f"**MAE:** {mae:.4f}")
         st.write(f"**RMSE:** {rmse:.4f}")
 
-    # === Evaluasi Akurasi Prediksi ===
-st.subheader("📊 Evaluasi Akurasi Prediksi")
-
-st.write(f"**R² (Akurasi):** {r2_score_value:.2%}")
-st.write(f"**MAE:** {mae:.4f}")
-st.write(f"**RMSE:** {rmse:.4f}")
-
-# === Keterangan Otomatis ===
-if r2_score_value >= 0.9:
-    st.success("Model menunjukkan performa **sangat baik (R² > 90%)**, menandakan fitur-fitur memiliki hubungan kuat terhadap nilai keseluruhan siswa.")
-elif r2_score_value >= 0.75:
-    st.info("Model menunjukkan performa **baik (R² antara 75–90%)**, artinya model cukup akurat namun masih bisa ditingkatkan dengan tuning atau data tambahan.")
-elif r2_score_value >= 0.5:
-    st.warning("Model menunjukkan performa **cukup (R² antara 50–75%)**, beberapa faktor mungkin belum sepenuhnya terwakili oleh data.")
-else:
-    st.error("Model menunjukkan performa **rendah (R² < 50%)**, kemungkinan ada noise tinggi atau fitur belum relevan dengan target.")
+        # === 🔍 Keterangan otomatis berdasarkan akurasi ===
+        if r2 >= 0.9:
+            st.success("Model menunjukkan performa **sangat baik (R² > 90%)**, "
+                       "menandakan fitur-fitur memiliki hubungan kuat terhadap nilai keseluruhan siswa.")
+        elif r2 >= 0.75:
+            st.info("Model menunjukkan performa **baik (R² antara 75–90%)**, "
+                    "artinya model cukup akurat namun masih bisa ditingkatkan dengan tuning atau data tambahan.")
+        elif r2 >= 0.5:
+            st.warning("Model menunjukkan performa **cukup (R² antara 50–75%)**, "
+                       "beberapa faktor mungkin belum sepenuhnya terwakili oleh data.")
+        else:
+            st.error("Model menunjukkan performa **rendah (R² < 50%)**, "
+                     "kemungkinan ada noise tinggi atau fitur belum relevan dengan target.")
 
     # === 5. Download hasil prediksi ===
     csv = df.to_csv(index=False).encode("utf-8")
@@ -76,4 +73,3 @@ else:
         "text/csv",
         key="download-csv"
     )
-
