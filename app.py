@@ -6,15 +6,15 @@ import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
 
-# === 1. Load Model & Kolom ===
+#1. Load Model & Kolom
 model = joblib.load("rf_model.pkl")
 columns = joblib.load("columns.pkl")
 
-# === 2. Tampilan Halaman ===
+# 2. Tampilan Halaman 
 st.title("🎓 Student Overall Performance Predictor")
 st.write("Unggah dataset untuk memprediksi nilai *Overall* mahasiswa.")
 
-# === 3. Upload File ===
+# 3. Upload File
 uploaded_file = st.file_uploader("Upload file CSV", type=["csv"])
 
 if uploaded_file is not None:
@@ -35,25 +35,25 @@ if uploaded_file is not None:
     df_encoded = pd.get_dummies(df)
     df_encoded = df_encoded.reindex(columns=columns, fill_value=0)
 
-    # === 📊 4. Exploratory Data Analysis (EDA) ===
+    # 📊 4. Exploratory Data Analysis (EDA)
     st.subheader("📈 Exploratory Data Analysis (EDA)")
     st.write("Bagian ini menampilkan ringkasan dan visualisasi dasar dari data yang kamu unggah.")
 
-    # --- Info dasar ---
+    # Info dasar 
     st.write("**1️⃣ Informasi Umum Dataset**")
     st.write(f"Jumlah Baris: {df_raw.shape[0]}")
     st.write(f"Jumlah Kolom: {df_raw.shape[1]}")
     st.write("Nama Kolom:", list(df_raw.columns))
 
-    # --- Statistik deskriptif ---
+    # Statistik deskriptif
     st.write("**2️⃣ Statistik Deskriptif (Numerik)**")
     st.dataframe(df_raw.describe())
 
-    # --- Cek missing value ---
+    # Cek missing value
     st.write("**3️⃣ Cek Nilai Kosong (Missing Values)**")
     st.dataframe(df_raw.isna().sum().reset_index().rename(columns={"index": "Kolom", 0: "Jumlah Missing"}))
 
-    # --- Korelasi antar variabel numerik ---
+    # Korelasi antar variabel numerik
     num_cols = df_raw.select_dtypes(include=["int64", "float64"]).columns
     if len(num_cols) > 1:
         st.write("**4️⃣ Korelasi Antar Variabel Numerik**")
@@ -62,7 +62,7 @@ if uploaded_file is not None:
         sns.heatmap(corr, annot=True, cmap="Blues", ax=ax)
         st.pyplot(fig)
 
-    # --- Distribusi nilai Overall (jika ada) ---
+    # Distribusi nilai Overall (jika ada)
     if "Overall" in df_raw.columns:
         st.write("**5️⃣ Distribusi Nilai Overall**")
         fig2, ax2 = plt.subplots(figsize=(6, 4))
@@ -73,14 +73,14 @@ if uploaded_file is not None:
 
     st.markdown("---")
 
-    # === 5. Prediksi ===
+    # 5. Prediksi 
     y_pred = model.predict(df_encoded)
     df["Prediksi_Overall"] = y_pred
 
     st.success("✅ Prediksi selesai!")
     st.dataframe(df[["Prediksi_Overall"]])
 
-    # === 6. Evaluasi jika kolom Overall ada ===
+    #  6. Evaluasi jika kolom Overall ada 
     if has_overall:
         r2 = r2_score(y_true, y_pred)
         mae = mean_absolute_error(y_true, y_pred)
@@ -91,7 +91,7 @@ if uploaded_file is not None:
         st.write(f"**MAE:** {mae:.4f}")
         st.write(f"**RMSE:** {rmse:.4f}")
 
-        # === 🔍 Keterangan otomatis berdasarkan akurasi ===
+        # 🔍 Keterangan otomatis berdasarkan akurasi 
         if r2 >= 0.9:
             st.success("Model menunjukkan performa **sangat baik (R² > 90%)**, "
                        "menandakan fitur-fitur memiliki hubungan kuat terhadap nilai keseluruhan siswa.")
@@ -105,7 +105,7 @@ if uploaded_file is not None:
             st.error("Model menunjukkan performa **rendah (R² < 50%)**, "
                      "kemungkinan ada noise tinggi atau fitur belum relevan dengan target.")
 
-    # === 7. Download hasil prediksi ===
+    #  7. Download hasil prediksi 
     csv = df.to_csv(index=False).encode("utf-8")
     st.download_button(
         "📥 Download hasil prediksi",
