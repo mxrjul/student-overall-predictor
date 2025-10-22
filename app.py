@@ -32,6 +32,48 @@ if uploaded_file is not None:
     df_encoded = pd.get_dummies(df)
     df_encoded = df_encoded.reindex(columns=columns, fill_value=0)
 
+# === 📊 4. Exploratory Data Analysis (EDA) ===
+    st.subheader("📈 Exploratory Data Analysis (EDA)")
+
+    st.write("Bagian ini menampilkan ringkasan dan visualisasi dasar dari data yang kamu unggah.")
+
+    # --- Info dasar ---
+    st.write("**1️⃣ Informasi Umum Dataset**")
+    st.write(f"Jumlah Baris: {df.shape[0]}")
+    st.write(f"Jumlah Kolom: {df.shape[1]}")
+    st.write("Nama Kolom:", list(df.columns))
+
+    # --- Statistik deskriptif ---
+    st.write("**2️⃣ Statistik Deskriptif (Numerik)**")
+    st.dataframe(df.describe())
+
+    # --- Cek missing value ---
+    st.write("**3️⃣ Cek Nilai Kosong (Missing Values)**")
+    st.dataframe(df.isna().sum().reset_index().rename(columns={"index": "Kolom", 0: "Jumlah Missing"}))
+
+    # --- Korelasi antar variabel numerik ---
+    num_cols = df.select_dtypes(include=["int64", "float64"]).columns
+    if len(num_cols) > 1:
+        st.write("**4️⃣ Korelasi Antar Variabel Numerik**")
+        import seaborn as sns
+        import matplotlib.pyplot as plt
+
+        fig, ax = plt.subplots(figsize=(8, 5))
+        corr = df[num_cols].corr()
+        sns.heatmap(corr, annot=True, cmap="Blues", ax=ax)
+        st.pyplot(fig)
+
+    # --- Distribusi nilai Overall (jika ada) ---
+    if "Overall" in df.columns:
+        st.write("**5️⃣ Distribusi Nilai Overall**")
+        fig2, ax2 = plt.subplots(figsize=(6, 4))
+        sns.histplot(df["Overall"], bins=10, kde=True, color="skyblue", ax=ax2)
+        ax2.set_xlabel("Overall")
+        ax2.set_ylabel("Frekuensi")
+        st.pyplot(fig2)
+
+    st.markdown("---")
+
     # Prediksi
     y_pred = model.predict(df_encoded)
     df["Prediksi_Overall"] = y_pred
@@ -39,7 +81,7 @@ if uploaded_file is not None:
     st.success("✅ Prediksi selesai!")
     st.dataframe(df[["Prediksi_Overall"]])
 
-    # === 4. Evaluasi jika kolom Overall ada ===
+    # === 5. Evaluasi jika kolom Overall ada ===
     if has_overall:
         r2 = r2_score(y_true, y_pred)
         mae = mean_absolute_error(y_true, y_pred)
@@ -64,7 +106,7 @@ if uploaded_file is not None:
             st.error("Model menunjukkan performa **rendah (R² < 50%)**, "
                      "kemungkinan ada noise tinggi atau fitur belum relevan dengan target.")
 
-    # === 5. Download hasil prediksi ===
+    # === 6. Download hasil prediksi ===
     csv = df.to_csv(index=False).encode("utf-8")
     st.download_button(
         "📥 Download hasil prediksi",
