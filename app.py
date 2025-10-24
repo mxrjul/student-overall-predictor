@@ -73,25 +73,26 @@ if mode == "🧮 Input Manual":
         st.success(f"🎯 **Prediksi Nilai Overall:** {pred:.2f}")
 
 # MODE 2 : Upload File CSV
-uploaded_file = st.file_uploader("Upload file CSV", type=["csv"])
+elif mode == "📂 Upload CSV":
+    uploaded_file = st.file_uploader("Upload file CSV", type=["csv"])
 
-if uploaded_file is not None:
-    # Baca data yang diupload
-    data = pd.read_csv(uploaded_file)
-    st.write("📋 Data yang diupload:")
-    st.dataframe(data.head())
+    if uploaded_file is not None:
+        # Baca data yang diupload
+        data = pd.read_csv(uploaded_file)
+        st.write("📋 Data yang diupload:")
+        st.dataframe(data.head())
+        
+        # Cek apakah ada kolom "Overall"
+        has_overall = "Overall" in df.columns
     
-    # Cek apakah ada kolom "Overall"
-    has_overall = "Overall" in df.columns
-
-    # Jika ada kolom Overall → pisahkan target
-    if has_overall:
-        y_true = df["Overall"]
-        df = df.drop(columns=["Overall"])
-
-    # One-hot encoding agar sesuai dengan model
-    df_encoded = pd.get_dummies(df)
-    df_encoded = df_encoded.reindex(columns=columns, fill_value=0)
+        # Jika ada kolom Overall → pisahkan target
+        if has_overall:
+            y_true = df["Overall"]
+            df = df.drop(columns=["Overall"])
+    
+        # One-hot encoding agar sesuai dengan model
+        df_encoded = pd.get_dummies(df)
+        df_encoded = df_encoded.reindex(columns=columns, fill_value=0)
 
     # 4. Exploratory Data Analysis (EDA)
     st.subheader("📈 Exploratory Data Analysis (EDA)")
@@ -172,6 +173,7 @@ if uploaded_file is not None:
         "text/csv",
         key="download-csv"
     )
+
 
 
 
