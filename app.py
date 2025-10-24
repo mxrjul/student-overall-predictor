@@ -14,7 +14,65 @@ columns = joblib.load("columns.pkl")
 st.title("🎓 Student Overall Performance Predictor")
 st.write("Unggah dataset untuk memprediksi nilai *Overall* mahasiswa.")
 
-# 3. Upload File
+# 3. Pilihan Mode
+mode = st.radio("Pilih mode input data:", ["🧮 Input Manual", "📂 Upload CSV"])
+
+# MODE 1: INPUT MANUAL UNTUK SATU MAHASISWA
+if mode == "🧮 Input Manual":
+    st.subheader("🧾 Masukkan Data Mahasiswa")
+
+    # Form Input
+    col1, col2 = st.columns(2)
+    with col1:
+        department = st.selectbox("Department", ["CSE", "EEE", "BBA", "English", "Economics"])
+        gender = st.selectbox("Gender", ["Male", "Female"])
+        hometown = st.selectbox("Hometown", ["Urban", "Rural"])
+        income = st.number_input("Family Income (dalam ribuan)", 10, 1000, 100)
+        ssc = st.number_input("SSC Score", 1.0, 5.0, 4.5)
+        hsc = st.number_input("HSC Score", 1.0, 5.0, 4.3)
+
+    with col2:
+        computer = st.selectbox("Computer Knowledge", ["Yes", "No"])
+        preparation = st.slider("Preparation Time (jam/hari)", 0, 10, 2)
+        gaming = st.slider("Gaming Time (jam/hari)", 0, 10, 1)
+        attendance = st.slider("Attendance (%)", 0, 100, 85)
+        job = st.selectbox("Part-time Job", ["Yes", "No"])
+        english = st.selectbox("English Proficiency", ["Poor", "Average", "Good", "Excellent"])
+        extra = st.selectbox("Extracurricular Participation", ["Yes", "No"])
+        semester = st.number_input("Current Semester", 1, 8, 4)
+        last = st.number_input("Last Semester GPA", 1.0, 4.0, 3.2)
+
+    # Buat dataframe 1 baris
+    user_data = pd.DataFrame([{
+        "Department": department,
+        "Gender": gender,
+        "Hometown": hometown,
+        "Income": income,
+        "SSC": ssc,
+        "HSC": hsc,
+        "Computer": computer,
+        "Preparation": preparation,
+        "Gaming": gaming,
+        "Attendance": attendance,
+        "Job": job,
+        "English": english,
+        "Extra": extra,
+        "Semester": semester,
+        "Last": last
+    }])
+
+    st.write("📋 Data yang kamu masukkan:")
+    st.dataframe(user_data)
+
+    # Prediksi ketika tombol ditekan
+    if st.button("🚀 Prediksi Nilai Overall"):
+        df_encoded = pd.get_dummies(user_data)
+        df_encoded = df_encoded.reindex(columns=columns, fill_value=0)
+
+        pred = model.predict(df_encoded)[0]
+        st.success(f"🎯 **Prediksi Nilai Overall:** {pred:.2f}")
+
+# MODE 2 : Upload File CSV
 uploaded_file = st.file_uploader("Upload file CSV", type=["csv"])
 
 if uploaded_file is not None:
@@ -35,7 +93,7 @@ if uploaded_file is not None:
     df_encoded = pd.get_dummies(df)
     df_encoded = df_encoded.reindex(columns=columns, fill_value=0)
 
-    # 📊 4. Exploratory Data Analysis (EDA)
+    # 4. Exploratory Data Analysis (EDA)
     st.subheader("📈 Exploratory Data Analysis (EDA)")
     st.write("Bagian ini menampilkan ringkasan dan visualisasi dasar dari data yang kamu unggah.")
 
@@ -114,3 +172,4 @@ if uploaded_file is not None:
         "text/csv",
         key="download-csv"
     )
+
