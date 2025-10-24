@@ -24,23 +24,23 @@ if mode == "🧮 Input Manual":
     # Form Input
     col1, col2 = st.columns(2)
     with col1:
-        department = st.selectbox("Department", ["CSE", "EEE", "BBA", "English", "Economics"])
-        gender = st.selectbox("Gender", ["Male", "Female"])
-        hometown = st.selectbox("Hometown", ["Urban", "Rural"])
-        income = st.number_input("Family Income (dalam ribuan)", 10, 1000, 100)
-        ssc = st.number_input("SSC Score", 1.0, 5.0, 4.5)
-        hsc = st.number_input("HSC Score", 1.0, 5.0, 4.3)
+        department = st.selectbox("Jurusan", ["Business Administration", "Computer Science and Engineering", "Economics", "Electrical and Electronic Engineering", "English", "Journalism, Communication and Media Studies", "Law and Human Rights", "Political Science", "Public Health", "Sociology"])
+        gender = st.selectbox("Jenis Kelamin", ["Male", "Female"])
+        hometown = st.selectbox("Daerah asal", ["Village", "City"])
+        income = st.number_input("Pendapatan (dalam ribuan ringgit)", 10, 1000, 100)
+        ssc = st.number_input("Nilai Akhir SMP", 1.0, 5.0, 4.5)
+        hsc = st.number_input("Nilai Akhir SMA", 1.0, 5.0, 4.3)
 
     with col2:
-        computer = st.selectbox("Computer Knowledge", ["Yes", "No"])
-        preparation = st.slider("Preparation Time (jam/hari)", 0, 10, 2)
-        gaming = st.slider("Gaming Time (jam/hari)", 0, 10, 1)
-        attendance = st.slider("Attendance (%)", 0, 100, 85)
-        job = st.selectbox("Part-time Job", ["Yes", "No"])
-        english = st.selectbox("English Proficiency", ["Poor", "Average", "Good", "Excellent"])
-        extra = st.selectbox("Extracurricular Participation", ["Yes", "No"])
-        semester = st.number_input("Current Semester", 1, 8, 4)
-        last = st.number_input("Last Semester GPA", 1.0, 4.0, 3.2)
+        computer = st.selectbox("Pengetahuan Komputer", ["1", "2", "3", "4", "5"])
+        preparation = st.slider("Waktu Belajar (jam/hari)", 0, 6, 2)
+        gaming = st.slider("Waktu Bermain Game (jam/hari)", 0, 6, 1)
+        attendance = st.slider("Kehadiran (%)", 0, 100, 85)
+        job = st.selectbox("Kerja Paruh Waktu", ["Yes", "No"])
+        english = st.selectbox("Kecakapan Berbahasa Inggris", ["Poor", "Average", "Good", "Excellent"])
+        extra = st.selectbox("Partisipasi Ekskul", ["Yes", "No"])
+        semester = st.number_input("Semester Sekarang", 1, 14, 4)
+        last = st.number_input("IPK Terakhir", 1.0, 4.0, 3.2)
 
     # Buat dataframe 1 baris
     user_data = pd.DataFrame([{
@@ -172,4 +172,5 @@ if uploaded_file is not None:
         "text/csv",
         key="download-csv"
     )
+
 
