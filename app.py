@@ -78,9 +78,9 @@ elif mode == "📂 Upload CSV":
 
     if uploaded_file is not None:
         # Baca data yang diupload
-        data = pd.read_csv(uploaded_file)
-        st.write("📋 Data yang diupload:")
-        st.dataframe(data.head())
+        df = pd.read_csv(uploaded_file)
+        st.subheader("📋 Data yang diunggah:")
+        st.dataframe(df.head())
         
         # Cek apakah ada kolom "Overall"
         has_overall = "Overall" in df.columns
@@ -173,6 +173,7 @@ elif mode == "📂 Upload CSV":
             "text/csv",
             key="download-csv"
         )
+
 
 
 
