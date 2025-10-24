@@ -73,13 +73,12 @@ if mode == "🧮 Input Manual":
         st.success(f"🎯 **Prediksi Nilai Overall:** {pred:.2f}")
 
 # MODE 2 : Upload File CSV
-uploaded_file = st.file_uploader("Upload file CSV", type=["csv"])
-
-if uploaded_file is not None:
-    df = pd.read_csv(uploaded_file)
-    df_raw = df.copy()  # simpan salinan asli untuk EDA
-    st.subheader("📋 Data yang diunggah:")
-    st.dataframe(df.head())
+elif mode == "📂 Upload CSV":
+    uploaded_file = st.file_uploader("Upload file CSV", type=["csv"])
+    if uploaded_file is not None:
+        df = pd.read_csv(uploaded_file)
+        st.subheader("📋 Data yang diunggah:")
+        st.dataframe(df.head())
 
     # Cek apakah ada kolom "Overall"
     has_overall = "Overall" in df.columns
@@ -172,5 +171,6 @@ if uploaded_file is not None:
         "text/csv",
         key="download-csv"
     )
+
 
 
